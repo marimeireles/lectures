@@ -1,0 +1,63 @@
+### Possible resolution for Bus:
+
+class HauntedBus_v2:
+    """Another bus haunted by ghost passengers"""
+    
+    def __init__(self, passengers=[]):  # 🐛
+        self.passengers = passengers
+    
+    def pick(self, name):
+        self.passengers.append(name)
+        
+    def drop(self, name):
+        self.passengers.remove(name)
+
+The `.pick` and `.drop` methods were changing the default value for the passengers argument in the `__init__` method.
+
+The argument defaults are also class attributes (indirectly, because `__init__` is a class attribute).
+
+Check it out:
+
+HauntedBus_v2.__init__.__defaults__
+
+This is another possibility on where weird things can happen:
+
+```
+    def __init__(self, passengers = []):
+        self.passengers = passengers
+```
+
+That's because the object passed is not "a copy of", not "a reference to", not "a pointer to" - it IS the object itself that is passed.
+
+### Bus answer
+
+```
+class Bus:
+    """The bus we wanted all along"""
+
+    def __init__(self, passengers=None):
+        self.passengers = list(passengers) if passengers else []
+
+    def pick(self, name):
+        self.passengers.append(name)
+        
+    def drop(self, name):
+        self.passengers.remove(name)
+```
+
+```
+bus6.drop('Sue')
+bus6.passengers
+```
+
+```
+hockey_team
+```
+
+On line 5, the expression `list(passengers)` builds a new list from the `passengers` argument.
+
+If `passengers` is a list, `list(passengers)` makes a shallow copy of it.
+
+If `passengers` is an other iterable object (`tuple`, `set`, generator, etc...), then `list(passengers)` builds a new list from it.
+
+> Be conservative in what you send, be liberal in what you accept — _Postel's Law_
