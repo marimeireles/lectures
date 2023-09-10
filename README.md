@@ -18,4 +18,4 @@ A considerable portion of the content related to the Object-Oriented Programming
 
 For any queries or suggestions, feel free to open an issue or submit a pull request.
 
-Thank you for visiting this repository, and we hope you find the materials to be beneficial in your educational journey.
+Thank you!
